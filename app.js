@@ -30,6 +30,12 @@ app.use(session({
   cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 day
 }));
 
+// ── Home Route ──────────────────────────────────────────────
+// Simple homepage to confirm API is running
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome to RecipeRank API!', status: 'running' });
+});
+
 // ── Database Connection ─────────────────────────────────────
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ Connected to MongoDB'))
