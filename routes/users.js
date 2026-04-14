@@ -3,36 +3,40 @@ const router = express.Router();
 const User = require('../models/User');
 const { isAuthenticated } = require('../middleware/auth');
 
-// POST /api/users/register — Create a new account
+// create new user
 router.post('/register', async (req, res) => {
+  // get user input from request body
   try {
     const { username, email, password } = req.body;
 
-    // Manual validation
+    // validation
+    // chekcs username is valid length
     if (!username || username.length < 3) {
       return res.status(400).json({ error: 'Username must be at least 3 characters.' });
     }
+    // checks email is valid
     if (!email || !email.includes('@')) {
       return res.status(400).json({ error: 'Please enter a valid email.' });
     }
+    // checks if password is atleast 6 chars
     if (!password || password.length < 6) {
       return res.status(400).json({ error: 'Password must be at least 6 characters.' });
     }
 
-    // Check if email already exists
+    // checks if email already is registered
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: 'Email already in use.' });
     }
 
-    // Create and save the new user
+    // creates and saves new user document
     const user = new User({ username, email, password });
     await user.save();
 
-    // Log them in automatically after registering
+    // automatically logs user in
     req.session.userId = user._id;
 
-    // Set a cookie with their username
+    // set a cookie with there username
     res.cookie('username', user.username, { maxAge: 1000 * 60 * 60 * 24 });
 
     res.status(201).json({ message: 'Account created!', userId: user._id });
@@ -41,32 +45,32 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// POST /api/users/login — Log in
+// authenticate user and create session
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Basic validation
+    // checks if email and passward are there
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required.' });
     }
 
-    // Find user by email
+    //finds user by email
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
-    // Check password
+    // Checks password with hashed passward
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
-    // Save user to session
+    // Saves user id to session
     req.session.userId = user._id;
 
-    // Set a cookie with their username
+    // Sets a cookie with there username
     res.cookie('username', user.username, { maxAge: 1000 * 60 * 60 * 24 });
 
     res.json({ message: 'Logged in!', userId: user._id });
@@ -75,21 +79,22 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// POST /api/users/logout — Log out
+// log out
 router.post('/logout', (req, res) => {
-  // Destroy the session
+  // detroy session data
   req.session.destroy((err) => {
     if (err) return res.status(500).json({ error: 'Could not log out.' });
-    res.clearCookie('connect.sid'); // clear session cookie
-    res.clearCookie('username');    // clear username cookie
+    // clears session and username cookie
+    res.clearCookie('connect.sid'); 
+    res.clearCookie('username');    
     res.json({ message: 'Logged out successfully.' });
   });
 });
 
-// GET /api/users/profile — View own profile (must be logged in)
+//view own profile
 router.get('/profile', isAuthenticated, async (req, res) => {
   try {
-    // Find user but don't return the password
+    // find user by sessionID and return profile data
     const user = await User.findById(req.session.userId).select('-password');
     if (!user) return res.status(404).json({ error: 'User not found.' });
     res.json(user);
