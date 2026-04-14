@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-// Define what a User looks like in the database
+//defines what a user will look like in the database
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -22,14 +22,14 @@ const userSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Hash password before saving to database
+//hashes password before saveed to database
 userSchema.pre('save', async function() {
-  // Only hash if password was changed
+  // only hash if passward was changed
   if (!this.isModified('password')) return;
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-// Method to check if a password is correct
+// method that checks if password is correct
 userSchema.methods.comparePassword = async function(candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
