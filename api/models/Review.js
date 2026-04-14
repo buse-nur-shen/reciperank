@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Define what a Review looks like in the database
+//defines what a review will look like in database
 const reviewSchema = new mongoose.Schema({
   recipe: {
     type: mongoose.Schema.Types.ObjectId,
@@ -22,6 +22,6 @@ const reviewSchema = new mongoose.Schema({
     type: String,
     trim: true
   }
-}, { timestamps: true }); // adds createdAt and updatedAt automatically
+}, { timestamps: true });
 
 module.exports = mongoose.model('Review', reviewSchema);
