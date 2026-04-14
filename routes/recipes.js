@@ -3,40 +3,47 @@ const router = express.Router();
 const Recipe = require('../models/Recipe');
 const { isAuthenticated } = require('../middleware/auth');
 
-// GET /api/recipes — Get all recipes (with optional filters)
+// get all recipes 
 router.get('/', async (req, res) => {
   try {
-    // Build a filter object from query params
-    // e.g. /api/recipes?category=baking&difficulty=easy
+    //create a filter object based on query
     const filter = {};
     if (req.query.category) filter.category = req.query.category;
     if (req.query.subcategory) filter.subcategory = req.query.subcategory;
     if (req.query.difficulty) filter.difficulty = req.query.difficulty;
-
+    // queries database and populates author username field
     const recipes = await Recipe.find(filter).populate('author', 'username');
+    // returns recipes
     res.json(recipes);
+    // error handling
   } catch (err) {
     res.status(500).json({ error: 'Server error: ' + err.message });
   }
 });
 
-// GET /api/recipes/:id — Get one recipe by ID
+// get one reciple using ID
 router.get('/:id', async (req, res) => {
   try {
+    // finds recipe by ID and gets authors name. if recipe doesnt exist gives 404 error
     const recipe = await Recipe.findById(req.params.id).populate('author', 'username');
-    if (!recipe) return res.status(404).json({ error: 'Recipe not found.' });
+    if (!recipe) 
+      return res.status(404).json({ error: 'Recipe not found.' 
+    });
+    // returns recipe
     res.json(recipe);
+    // error handling
   } catch (err) {
     res.status(500).json({ error: 'Server error: ' + err.message });
   }
 });
 
-// POST /api/recipes — Create a new recipe (must be logged in)
+// create new recipe. must be logged in
 router.post('/', isAuthenticated, async (req, res) => {
   try {
-    const { title, category, subcategory, ingredients, instructions, cookingTime, difficulty, servings } = req.body;
+    const { title, category,  subcategory, ingredients,instructions, cookingTime, difficulty, servings } 
+      = req.body;
 
-    // Manual validation
+    // parameter validations
     if (!title) {
       return res.status(400).json({ error: 'Title is required.' });
     }
@@ -58,18 +65,19 @@ router.post('/', isAuthenticated, async (req, res) => {
     if (!servings || servings < 1) {
       return res.status(400).json({ error: 'Servings must be a positive number.' });
     }
-
+    // creates new recipe
     const recipe = new Recipe({
-      title,
-      category,
+      title, 
+      category, 
       subcategory,
-      ingredients,
-      instructions,
-      cookingTime,
-      difficulty,
+      ingredients, 
+      instructions, 
+      cookingTime, 
+      difficulty, 
       servings,
-      author: req.session.userId // attach logged in user as author
+      author: req.session.userId
     });
+    // saves to database and returns success message
     await recipe.save();
     res.status(201).json({ message: 'Recipe created!', recipe });
   } catch (err) {
@@ -77,21 +85,22 @@ router.post('/', isAuthenticated, async (req, res) => {
   }
 });
 
-// PUT /api/recipes/:id — Update a recipe (only the author can do this)
+// update recipe. onlu author can do this
 router.put('/:id', isAuthenticated, async (req, res) => {
   try {
+    //find recipe by id
     const recipe = await Recipe.findById(req.params.id);
     if (!recipe) return res.status(404).json({ error: 'Recipe not found.' });
 
-    // Check the logged in user is the author
+    // checks if user is author
     if (recipe.author.toString() !== req.session.userId.toString()) {
       return res.status(403).json({ error: 'You can only edit your own recipes.' });
     }
-
+    // update and return recipe
     const updated = await Recipe.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true } // return the updated recipe
+      { new: true }
     );
     res.json({ message: 'Recipe updated!', recipe: updated });
   } catch (err) {
@@ -99,17 +108,18 @@ router.put('/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// DELETE /api/recipes/:id — Delete a recipe (only the author can do this)
+// delete recipe. only author can do this
 router.delete('/:id', isAuthenticated, async (req, res) => {
   try {
+    // find recipe by ID
     const recipe = await Recipe.findById(req.params.id);
     if (!recipe) return res.status(404).json({ error: 'Recipe not found.' });
 
-    // Check the logged in user is the author
+    // checks if user is author
     if (recipe.author.toString() !== req.session.userId.toString()) {
       return res.status(403).json({ error: 'You can only delete your own recipes.' });
     }
-
+    // deletes recipe
     await Recipe.findByIdAndDelete(req.params.id);
     res.json({ message: 'Recipe deleted.' });
   } catch (err) {
