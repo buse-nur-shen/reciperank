@@ -1,4 +1,3 @@
-// Load environment variables from .env file
 require('dotenv').config();
 
 const express = require('express');
@@ -9,17 +8,15 @@ const cors = require('cors');
 
 const app = express();
 
-// ── Middleware ──────────────────────────────────────────────
-// Parse incoming JSON requests
+// parse json request
 app.use(express.json());
 
-// Parse URL-encoded form data
+// parse url enconded data
 app.use(express.urlencoded({ extended: true }));
 
-// Parse cookies
+//parse cookie
 app.use(cookieParser());
 
-// Allow cross-origin requests
 app.use(cors());
 
 // Set up sessions
@@ -30,27 +27,27 @@ app.use(session({
   cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 day
 }));
 
-// ── Home Route ──────────────────────────────────────────────
-// Simple homepage to confirm API is running
+// route to verify api is running
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to RecipeRank API!', status: 'running' });
 });
 
-// ── Database Connection ─────────────────────────────────────
+
+// connect to mongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch((err) => console.error('❌ MongoDB connection error:', err));
 
-// ── Routes ──────────────────────────────────────────────────
+// import route modules
 const userRoutes = require('./routes/users');
 const recipeRoutes = require('./routes/recipes');
 const reviewRoutes = require('./routes/reviews');
-
+// gives route handlers paths
 app.use('/api/users', userRoutes);
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/reviews', reviewRoutes);
 
-// ── Start Server ────────────────────────────────────────────
+// assign server port and start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
