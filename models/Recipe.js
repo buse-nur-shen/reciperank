@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Define what a Recipe looks like in the database
+//defines what the recipe will look like in database
 const recipeSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -10,11 +10,12 @@ const recipeSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['cooking', 'baking'] // only these values allowed
+    // only these catagories
+    enum: ['cooking', 'baking']
   },
   subcategory: {
     type: String,
-    // Only relevant for baking
+    //only  is relevant for baking
     enum: ['cakes', 'cookies', 'breads', 'pastries', 'desserts', null]
   },
   ingredients: [{
@@ -26,7 +27,8 @@ const recipeSchema = new mongoose.Schema({
     required: true
   },
   cookingTime: {
-    type: Number, // in minutes
+    // minutes
+    type: Number,
     required: true
   },
   difficulty: {
@@ -38,12 +40,12 @@ const recipeSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  // Reference to the user who created this recipe
+  // Reference to user that created 
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   }
-}, { timestamps: true }); // adds createdAt and updatedAt automatically
+}, { timestamps: true });
 
 module.exports = mongoose.model('Recipe', recipeSchema);
