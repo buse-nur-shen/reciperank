@@ -24,13 +24,13 @@ leave reviews, and compare recipes.
 
 ## How to Run Locally
 1. Clone the repository
-2. Navigate to the api folder: `cd api`
-3. Install dependencies: `npm install`
-4. Create a `.env` file with:
+2. Navigate to the api folder: cd api
+3. Install dependencies: npm install
+4. Create a .env file with:
    - MONGO_URI=your_mongodb_connection_string
    - SESSION_SECRET=your_secret
    - PORT=3000
-5. Run the server: `npx nodemon app.js`
+5. Run the server: npx nodemon app.js
 
 ## API Endpoints
 
