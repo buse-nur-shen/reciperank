@@ -1,6 +1,6 @@
 const { body } = require('express-validator');
 
-// Rules for registering a new user
+// rules for new user registration
 const validateRegister = [
   body('username')
     .trim()
@@ -15,7 +15,7 @@ const validateRegister = [
     .isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
 ];
 
-// Rules for creating or updating a recipe
+// rules for recipes
 const validateRecipe = [
   body('title')
     .trim()
