@@ -1,0 +1,19 @@
+info:
+  name: Filter by subcategory
+  type: http
+  seq: 20
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/recipes?subcategory=cakes"
+  params:
+    - name: subcategory
+      value: cakes
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

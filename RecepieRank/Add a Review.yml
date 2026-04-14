@@ -1,0 +1,22 @@
+info:
+  name: " Add a Review"
+  type: http
+  seq: 9
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/reviews/69d8e21ad535b81fd867af15"
+  body:
+    type: json
+    data: |-
+      {
+        "rating": 5,
+        "comment": "These cookies are amazing!"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

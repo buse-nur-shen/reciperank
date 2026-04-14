@@ -1,0 +1,6 @@
+name: local
+variables:
+  - name: baseUrl
+    value: http://localhost:3000
+  - name: baseUrl
+    value: https://reciperank.onrender.com

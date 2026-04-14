@@ -1,0 +1,15 @@
+info:
+  name: " Delete Recipe"
+  type: http
+  seq: 14
+
+http:
+  method: DELETE
+  url: "{{baseUrl}}/api/recipes/69d8e21ad535b81fd867af15"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

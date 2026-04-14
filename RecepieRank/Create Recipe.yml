@@ -1,0 +1,28 @@
+info:
+  name: Create Recipe
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/recipes"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Chocolate Chip Cookies",
+        "category": "baking",
+        "subcategory": "cookies",
+        "ingredients": ["flour", "butter", "sugar", "chocolate chips", "eggs"],
+        "instructions": "Mix dry ingredients. Cream butter and sugar. Combine and bake at 180C for 12 minutes.",
+        "cookingTime": 25,
+        "difficulty": "easy",
+        "servings": 24
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

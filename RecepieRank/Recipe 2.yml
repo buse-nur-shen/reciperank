@@ -1,0 +1,27 @@
+info:
+  name: Recipe 2
+  type: http
+  seq: 17
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/recipes"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Spaghetti Bolognese",
+        "category": "cooking",
+        "ingredients": ["spaghetti", "minced beef", "tomato sauce", "onion", "garlic"],
+        "instructions": "Cook mince with onion and garlic. Add sauce and simmer. Serve with spaghetti.",
+        "cookingTime": 45,
+        "difficulty": "easy",
+        "servings": 4
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

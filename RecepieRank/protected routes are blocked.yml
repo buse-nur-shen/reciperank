@@ -1,0 +1,28 @@
+info:
+  name: protected routes are blocked
+  type: http
+  seq: 12
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/recipes"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Test Recipe",
+        "category": "baking",
+        "subcategory": "cookies",
+        "ingredients": ["flour", "butter"],
+        "instructions": "Mix and bake.",
+        "cookingTime": 20,
+        "difficulty": "easy",
+        "servings": 10
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
