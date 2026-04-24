@@ -17,7 +17,11 @@ app.use(express.urlencoded({ extended: true }));
 //parse cookie
 app.use(cookieParser());
 
-app.use(cors());
+// Allow requests from React frontend
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
 
 // Set up sessions
 app.use(session({
