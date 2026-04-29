@@ -1,9 +1,10 @@
-// AddRecipe.js - Page to create a new recipe with image upload
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// EditRecipe.js - Page to edit an existing recipe
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-function AddRecipe() {
+function EditRecipe() {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   // Form state
   const [formData, setFormData] = useState({
@@ -30,6 +31,63 @@ function AddRecipe() {
 
   // Loading state
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
+
+  // Fetch existing recipe data when page loads
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/recipes/${id}`,
+          { credentials: 'include' }
+        );
+        const data = await res.json();
+
+        if (!res.ok) {
+          setError('Recipe not found.');
+          setFetching(false);
+          return;
+        }
+
+        // Check if logged in user is the author
+        const profileRes = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/users/profile`,
+          { credentials: 'include' }
+        );
+        const profileData = await profileRes.json();
+
+        if (profileData._id !== data.author?._id) {
+          setError('You are not allowed to edit this recipe.');
+          setFetching(false);
+          return;
+        }
+
+        // Fill form with existing recipe data
+        setFormData({
+          title: data.title || '',
+          category: data.category || '',
+          subcategory: data.subcategory || '',
+          instructions: data.instructions || '',
+          cookingTime: data.cookingTime || '',
+          difficulty: data.difficulty || '',
+          servings: data.servings || ''
+        });
+        setIngredients(data.ingredients || ['']);
+
+        // Set existing image if there is one
+        if (data.image) {
+          setImagePreview(data.image);
+          setImageBase64(data.image);
+        }
+
+        setFetching(false);
+      } catch (err) {
+        setError('Failed to load recipe.');
+        setFetching(false);
+      }
+    };
+    fetchRecipe();
+  }, [id]);
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -41,7 +99,7 @@ function AddRecipe() {
     }
   };
 
-  // Handle image upload - convert to base64
+  // Handle image upload
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImageError('');
@@ -54,9 +112,9 @@ function AddRecipe() {
       return;
     }
 
-    // Limit file size to 3MB
-    if (file.size > 3 * 1024 * 1024) {
-      setImageError('Image must be smaller than 3MB.');
+    // Limit file size to 2MB
+    if (file.size > 2 * 1024 * 1024) {
+      setImageError('Image must be smaller than 2MB.');
       return;
     }
 
@@ -137,13 +195,11 @@ function AddRecipe() {
     setLoading(true);
     try {
       const filledIngredients = ingredients.filter(i => i.trim() !== '');
-      console.log('Image being sent:', imageBase64 ? 'YES - length: ' + imageBase64.length : 'NO - null');
-
 
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/recipes`,
+        `${process.env.REACT_APP_API_URL}/api/recipes/${id}`,
         {
-          method: 'POST',
+          method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
           body: JSON.stringify({
@@ -155,7 +211,6 @@ function AddRecipe() {
             cookingTime: parseInt(formData.cookingTime),
             difficulty: formData.difficulty,
             servings: parseInt(formData.servings),
-            // Include base64 image if uploaded
             image: imageBase64 || null
           })
         }
@@ -164,10 +219,10 @@ function AddRecipe() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Failed to create recipe.');
+        setError(data.error || 'Failed to update recipe.');
       } else {
-        setSuccess('Recipe created successfully!');
-        setTimeout(() => navigate(`/recipe/${data.recipe._id}`), 1000);
+        setSuccess('Recipe updated successfully!');
+        setTimeout(() => navigate(`/recipe/${id}`), 1000);
       }
     } catch (err) {
       setError('Something went wrong. Please try again.');
@@ -175,9 +230,15 @@ function AddRecipe() {
     setLoading(false);
   };
 
+  // Show loading while fetching recipe
+  if (fetching) return <p>Loading recipe...</p>;
+
+  // Show error if not author
+  if (error) return <p className="error-message">{error}</p>;
+
   return (
     <div className="add-recipe-page">
-      <h1 className="page-title">Add New Recipe</h1>
+      <h1 className="page-title">Edit Recipe</h1>
 
       <div className="add-recipe-container card">
 
@@ -251,7 +312,7 @@ function AddRecipe() {
 
           {/* Image Upload */}
           <div className="form-group">
-            <label>Recipe Image (PNG or JPEG, max 3MB)</label>
+            <label>Recipe Image (PNG or JPEG, max 2MB)</label>
             {!imagePreview ? (
               <div className="image-upload-area">
                 <input
@@ -263,7 +324,7 @@ function AddRecipe() {
                 />
                 <label htmlFor="image-input" className="image-upload-label">
                   <span>📷 Click to upload image</span>
-                  <span className="image-upload-hint">PNG or JPEG only, max 3MB</span>
+                  <span className="image-upload-hint">PNG or JPEG only, max 2MB</span>
                 </label>
               </div>
             ) : (
@@ -369,14 +430,23 @@ function AddRecipe() {
             </div>
           </div>
 
-          {/* Submit button */}
-          <button
-            type="submit"
-            className="btn-primary submit-btn"
-            disabled={loading}
-          >
-            {loading ? 'Creating Recipe...' : 'Create Recipe'}
-          </button>
+          {/* Buttons */}
+          <div className="edit-recipe-buttons">
+            <button
+              type="button"
+              onClick={() => navigate(`/recipe/${id}`)}
+              className="btn-secondary"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="btn-primary submit-btn"
+              disabled={loading}
+            >
+              {loading ? 'Saving Changes...' : 'Save Changes'}
+            </button>
+          </div>
 
         </form>
       </div>
@@ -384,4 +454,4 @@ function AddRecipe() {
   );
 }
 
-export default AddRecipe;
+export default EditRecipe;

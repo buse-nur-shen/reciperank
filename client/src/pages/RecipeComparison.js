@@ -1,17 +1,19 @@
 // RecipeComparison.js - Page to compare two recipes side by side
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 function RecipeComparison() {
+  // Get URL search params - to pre-select recipe A
+  const [searchParams] = useSearchParams();
+
   // State for all recipes (for dropdown selection)
   const [allRecipes, setAllRecipes] = useState([]);
   // State for selected recipe IDs
-  const [recipeAId, setRecipeAId] = useState('');
+  const [recipeAId, setRecipeAId] = useState(searchParams.get('recipeA') || '');
   const [recipeBId, setRecipeBId] = useState('');
   // State for selected recipe data
   const [recipeA, setRecipeA] = useState(null);
   const [recipeB, setRecipeB] = useState(null);
-  // State for loading
-  const [loading, setLoading] = useState(false);
   // State for error
   const [error, setError] = useState('');
 
@@ -32,7 +34,7 @@ function RecipeComparison() {
     fetchAllRecipes();
   }, []);
 
-  // Fetch recipe A when selected
+  // Fetch recipe A when selected or pre-selected from URL
   useEffect(() => {
     if (!recipeAId) {
       setRecipeA(null);
@@ -74,10 +76,9 @@ function RecipeComparison() {
     fetchRecipeB();
   }, [recipeBId]);
 
-  // Determine which recipe is recommended
+  // Determine which recipe is recommended based on cooking time
   const getRecommended = () => {
     if (!recipeA || !recipeB) return null;
-    // Recommend based on cooking time (shorter is better)
     if (recipeA.cookingTime < recipeB.cookingTime) return recipeA.title;
     if (recipeB.cookingTime < recipeA.cookingTime) return recipeB.title;
     return 'Both recipes are equal!';
@@ -92,6 +93,8 @@ function RecipeComparison() {
 
       {/* Recipe Selection */}
       <div className="comparison-selectors card">
+
+        {/* Recipe A - pre-selected from URL */}
         <div className="form-group">
           <label>Recipe A</label>
           <select
@@ -109,6 +112,7 @@ function RecipeComparison() {
 
         <div className="comparison-vs">VS</div>
 
+        {/* Recipe B - user picks this one */}
         <div className="form-group">
           <label>Recipe B</label>
           <select
@@ -116,11 +120,14 @@ function RecipeComparison() {
             onChange={(e) => setRecipeBId(e.target.value)}
           >
             <option value="">Select Recipe B</option>
-            {allRecipes.map(recipe => (
-              <option key={recipe._id} value={recipe._id}>
-                {recipe.title}
-              </option>
-            ))}
+            {allRecipes
+              // Filter out recipe A from recipe B options
+              .filter(recipe => recipe._id !== recipeAId)
+              .map(recipe => (
+                <option key={recipe._id} value={recipe._id}>
+                  {recipe.title}
+                </option>
+              ))}
           </select>
         </div>
       </div>
@@ -134,6 +141,18 @@ function RecipeComparison() {
 
             {/* Recipe A */}
             <div className="comparison-card card">
+
+              {/* Recipe A image */}
+              {recipeA.image ? (
+                <img
+                  src={recipeA.image}
+                  alt={recipeA.title}
+                  className="comparison-image"
+                />
+              ) : (
+                <div className="comparison-no-image">🍴</div>
+              )}
+
               <h2 className="comparison-recipe-title">{recipeA.title}</h2>
 
               <div className="comparison-stat">
@@ -180,6 +199,18 @@ function RecipeComparison() {
 
             {/* Recipe B */}
             <div className="comparison-card card">
+
+              {/* Recipe B image */}
+              {recipeB.image ? (
+                <img
+                  src={recipeB.image}
+                  alt={recipeB.title}
+                  className="comparison-image"
+                />
+              ) : (
+                <div className="comparison-no-image">🍴</div>
+              )}
+
               <h2 className="comparison-recipe-title">{recipeB.title}</h2>
 
               <div className="comparison-stat">
@@ -234,9 +265,16 @@ function RecipeComparison() {
       )}
 
       {/* Show message if only one recipe selected */}
-      {(recipeA || recipeB) && !(recipeA && recipeB) && (
+      {recipeA && !recipeB && (
         <p className="comparison-hint">
           Please select a second recipe to compare!
+        </p>
+      )}
+
+      {/* Show message if no recipes selected */}
+      {!recipeA && !recipeB && (
+        <p className="comparison-hint">
+          Please select two recipes to compare!
         </p>
       )}
     </div>

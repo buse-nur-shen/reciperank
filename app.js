@@ -8,18 +8,17 @@ const cors = require('cors');
 
 const app = express();
 
-// parse json request
-app.use(express.json());
+// Parse incoming JSON requests - increase limit for base64 images
+app.use(express.json({ limit: '10mb' }));
 
-// parse url enconded data
-app.use(express.urlencoded({ extended: true }));
+// Parse URL-encoded form data - increase limit for base64 images
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 //parse cookie
 app.use(cookieParser());
 
-// Allow requests from React frontend
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
   credentials: true
 }));
 

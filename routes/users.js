@@ -3,40 +3,36 @@ const router = express.Router();
 const User = require('../models/User');
 const { isAuthenticated } = require('../middleware/auth');
 
-// create new user
+// POST /api/users/register — Create a new account
 router.post('/register', async (req, res) => {
-  // get user input from request body
   try {
     const { username, email, password } = req.body;
 
-    // validation
-    // chekcs username is valid length
+    // Manual validation
     if (!username || username.length < 3) {
       return res.status(400).json({ error: 'Username must be at least 3 characters.' });
     }
-    // checks email is valid
     if (!email || !email.includes('@')) {
       return res.status(400).json({ error: 'Please enter a valid email.' });
     }
-    // checks if password is atleast 6 chars
     if (!password || password.length < 6) {
       return res.status(400).json({ error: 'Password must be at least 6 characters.' });
     }
 
-    // checks if email already is registered
+    // Check if email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: 'Email already in use.' });
     }
 
-    // creates and saves new user document
+    // Create and save the new user
     const user = new User({ username, email, password });
     await user.save();
 
-    // automatically logs user in
+    // Log them in automatically after registering
     req.session.userId = user._id;
 
-    // set a cookie with there username
+    // Set a cookie with their username
     res.cookie('username', user.username, { maxAge: 1000 * 60 * 60 * 24 });
 
     res.status(201).json({ message: 'Account created!', userId: user._id });
@@ -45,32 +41,32 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// authenticate user and create session
+// POST /api/users/login — Log in
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // checks if email and passward are there
+    // Basic validation
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required.' });
     }
 
-    //finds user by email
+    // Find user by email
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
-    // Checks password with hashed passward
+    // Check password
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
-    // Saves user id to session
+    // Save user to session
     req.session.userId = user._id;
 
-    // Sets a cookie with there username
+    // Set a cookie with their username
     res.cookie('username', user.username, { maxAge: 1000 * 60 * 60 * 24 });
 
     res.json({ message: 'Logged in!', userId: user._id });
@@ -79,25 +75,59 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// log out
+// POST /api/users/logout — Log out
 router.post('/logout', (req, res) => {
-  // detroy session data
+  // Destroy the session
   req.session.destroy((err) => {
     if (err) return res.status(500).json({ error: 'Could not log out.' });
-    // clears session and username cookie
-    res.clearCookie('connect.sid'); 
-    res.clearCookie('username');    
+    res.clearCookie('connect.sid'); // clear session cookie
+    res.clearCookie('username');    // clear username cookie
     res.json({ message: 'Logged out successfully.' });
   });
 });
 
-//view own profile
+// GET /api/users/profile — View own profile (must be logged in)
 router.get('/profile', isAuthenticated, async (req, res) => {
   try {
-    // find user by sessionID and return profile data
+    // Find user but don't return the password
     const user = await User.findById(req.session.userId).select('-password');
     if (!user) return res.status(404).json({ error: 'User not found.' });
     res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error: ' + err.message });
+  }
+});
+
+// PUT /api/users/profile — Update username and profile picture
+router.put('/profile', isAuthenticated, async (req, res) => {
+  try {
+    const { username, profilePicture } = req.body;
+
+    // Validate username
+    if (!username || username.length < 3) {
+      return res.status(400).json({ error: 'Username must be at least 3 characters.' });
+    }
+
+    // Check if username is already taken by another user
+    const existingUser = await User.findOne({
+      username,
+      _id: { $ne: req.session.userId }
+    });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Username already taken.' });
+    }
+
+    // Update user
+    const updated = await User.findByIdAndUpdate(
+      req.session.userId,
+      {
+        username,
+        profilePicture: profilePicture || null
+      },
+      { new: true }
+    ).select('-password');
+
+    res.json({ message: 'Profile updated!', user: updated });
   } catch (err) {
     res.status(500).json({ error: 'Server error: ' + err.message });
   }

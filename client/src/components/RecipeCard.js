@@ -6,20 +6,28 @@ function RecipeCard({ recipe }) {
   return (
     <div className="recipe-card card">
 
+      {/* Recipe Image - show image or placeholder */}
+      {recipe.image ? (
+        <img
+          src={recipe.image}
+          alt={recipe.title}
+          className="recipe-card-image"
+        />
+      ) : (
+        <div className="recipe-card-no-image">
+          🍴
+        </div>
+      )}
+
       {/* Recipe Title */}
       <h3 className="recipe-card-title">{recipe.title}</h3>
 
       {/* Recipe Details */}
       <div className="recipe-card-details">
-        {/* Category badge */}
         <span className="badge badge-category">{recipe.category}</span>
-
-        {/* Subcategory badge if exists */}
         {recipe.subcategory && (
           <span className="badge badge-subcategory">{recipe.subcategory}</span>
         )}
-
-        {/* Difficulty badge */}
         <span className={`badge badge-difficulty badge-${recipe.difficulty}`}>
           {recipe.difficulty}
         </span>

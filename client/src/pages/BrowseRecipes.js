@@ -1,4 +1,4 @@
-// BrowseRecipes.js - Page to browse and filter all recipes
+// BrowseRecipes.js - Page to browse, search and filter all recipes
 import React, { useState, useEffect } from 'react';
 import RecipeCard from '../components/RecipeCard';
 
@@ -9,6 +9,10 @@ function BrowseRecipes() {
   const [loading, setLoading] = useState(true);
   // State for error
   const [error, setError] = useState('');
+  // State for search input
+  const [searchInput, setSearchInput] = useState('');
+  // State for active search term
+  const [searchTerm, setSearchTerm] = useState('');
   // State for filters
   const [filters, setFilters] = useState({
     category: '',
@@ -17,6 +21,7 @@ function BrowseRecipes() {
   });
 
   // Fetch recipes when filters change
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchRecipes();
   }, [filters]);
@@ -55,14 +60,69 @@ function BrowseRecipes() {
     }
   };
 
+  // Handle search submit
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setSearchTerm(searchInput.toLowerCase());
+  };
+
+  // Clear search
+  const clearSearch = () => {
+    setSearchInput('');
+    setSearchTerm('');
+  };
+
   // Clear all filters
   const clearFilters = () => {
     setFilters({ category: '', subcategory: '', difficulty: '' });
+    clearSearch();
   };
+
+  // Filter recipes by search term on the frontend
+  const filteredRecipes = recipes.filter(recipe => {
+    if (!searchTerm) return true;
+    return (
+      recipe.title.toLowerCase().includes(searchTerm) ||
+      recipe.category.toLowerCase().includes(searchTerm) ||
+      (recipe.subcategory && recipe.subcategory.toLowerCase().includes(searchTerm)) ||
+      recipe.ingredients.some(ing => ing.toLowerCase().includes(searchTerm))
+    );
+  });
 
   return (
     <div className="browse-page">
       <h1 className="page-title">Browse Recipes</h1>
+
+      {/* Search Bar */}
+      <form onSubmit={handleSearch} className="search-bar-form">
+        <div className="search-bar">
+          <input
+            type="text"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="Search by title, ingredient, or category..."
+            className="search-input"
+          />
+          <button type="submit" className="btn-primary search-btn">
+            Search
+          </button>
+          {searchTerm && (
+            <button
+              type="button"
+              onClick={clearSearch}
+              className="btn-secondary search-btn"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+        {/* Show active search term */}
+        {searchTerm && (
+          <p className="search-active">
+            Showing results for: <strong>"{searchTerm}"</strong>
+          </p>
+        )}
+      </form>
 
       <div className="browse-layout">
 
@@ -84,21 +144,36 @@ function BrowseRecipes() {
             </select>
           </div>
 
-          {/* Subcategory filter - only show if baking selected */}
-          {filters.category === 'baking' && (
+          {/* Subcategory filter - show different options based on category */}
+          {filters.category && (
             <div className="form-group">
-              <label>Baking Section</label>
+              <label>Subcategory</label>
               <select
                 name="subcategory"
                 value={filters.subcategory}
                 onChange={handleFilterChange}
               >
                 <option value="">All</option>
-                <option value="cakes">Cakes</option>
-                <option value="cookies">Cookies</option>
-                <option value="breads">Breads</option>
-                <option value="pastries">Pastries</option>
-                <option value="desserts">Desserts</option>
+                {/* Baking subcategories */}
+                {filters.category === 'baking' && (
+                  <>
+                    <option value="cakes">Cakes</option>
+                    <option value="cookies">Cookies</option>
+                    <option value="breads">Breads</option>
+                    <option value="pastries">Pastries</option>
+                    <option value="desserts">Desserts</option>
+                  </>
+                )}
+                {/* Cooking subcategories */}
+                {filters.category === 'cooking' && (
+                  <>
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                    <option value="soups">Soups</option>
+                    <option value="salads">Salads</option>
+                  </>
+                )}
               </select>
             </div>
           )}
@@ -120,7 +195,7 @@ function BrowseRecipes() {
 
           {/* Clear filters button */}
           <button onClick={clearFilters} className="btn-secondary">
-            Clear Filters
+            Clear All
           </button>
         </aside>
 
@@ -133,15 +208,15 @@ function BrowseRecipes() {
           {/* Loading */}
           {loading ? (
             <p>Loading recipes...</p>
-          ) : recipes.length === 0 ? (
-            <p>No recipes found. Try different filters!</p>
+          ) : filteredRecipes.length === 0 ? (
+            <p>No recipes found. Try different filters or search terms!</p>
           ) : (
             <>
               <p className="recipes-count">
-                {recipes.length} recipe{recipes.length !== 1 ? 's' : ''} found
+                {filteredRecipes.length} recipe{filteredRecipes.length !== 1 ? 's' : ''} found
               </p>
               <div className="recipe-grid">
-                {recipes.map(recipe => (
+                {filteredRecipes.map(recipe => (
                   <RecipeCard key={recipe._id} recipe={recipe} />
                 ))}
               </div>

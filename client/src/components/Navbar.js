@@ -1,26 +1,43 @@
 // Navbar.js - Navigation bar shown on every page
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 function Navbar() {
-  // Track if user is logged in by checking cookie
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    document.cookie.includes('username')
-  );
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  // useLocation detects every page change
+  const location = useLocation();
+
+  // Check login status every time the page changes
+  useEffect(() => {
+    checkLoginStatus();
+  }, [location]);
+
+  // Check if user is logged in by calling profile endpoint
+  const checkLoginStatus = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/users/profile`,
+        { credentials: 'include' }
+      );
+      if (res.ok) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    } catch (err) {
+      setIsLoggedIn(false);
+    }
+  };
 
   // Handle logout
   const handleLogout = async () => {
     try {
-      // Send logout request to backend
       await fetch(`${process.env.REACT_APP_API_URL}/api/users/logout`, {
         method: 'POST',
         credentials: 'include'
       });
-      // Clear logged in state
       setIsLoggedIn(false);
-      // Redirect to home
       navigate('/');
     } catch (err) {
       console.error('Logout failed:', err);

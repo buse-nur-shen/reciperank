@@ -1,49 +1,64 @@
-// Home.js - Landing page showing featured recipes
+// Home.js - Landing page showing featured and popular baking recipes
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import RecipeCard from '../components/RecipeCard';
 
 function Home() {
-  // State to store featured recipes
+  // State to store featured recipes (most reviewed)
   const [featuredRecipes, setFeaturedRecipes] = useState([]);
-  // State to store baking recipes
+  // State to store most recent baking recipes
   const [bakingRecipes, setBakingRecipes] = useState([]);
   // State for loading
   const [loading, setLoading] = useState(true);
   // State for error
   const [error, setError] = useState('');
+  // State for login status
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Fetch recipes when page loads
+  // Fetch recipes and check login status when page loads
   useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        // Fetch all recipes for featured section
-        const allRes = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/recipes`,
-          { credentials: 'include' }
-        );
-        const allData = await allRes.json();
-        // Show first 3 recipes as featured
-        setFeaturedRecipes(allData.slice(0, 3));
-
-        // Fetch baking recipes
-        const bakingRes = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/recipes?category=baking`,
-          { credentials: 'include' }
-        );
-        const bakingData = await bakingRes.json();
-        // Show first 3 baking recipes
-        setBakingRecipes(bakingData.slice(0, 3));
-
-        setLoading(false);
-      } catch (err) {
-        setError('Failed to load recipes. Please try again.');
-        setLoading(false);
-      }
-    };
-
+    checkLoginStatus();
     fetchRecipes();
   }, []);
+
+  // Check if user is logged in
+  const checkLoginStatus = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/users/profile`,
+        { credentials: 'include' }
+      );
+      setIsLoggedIn(res.ok);
+    } catch (err) {
+      setIsLoggedIn(false);
+    }
+  };
+
+  // Fetch featured and baking recipes
+  const fetchRecipes = async () => {
+    try {
+      // Fetch featured recipes - most reviewed
+      const featuredRes = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/recipes/featured`,
+        { credentials: 'include' }
+      );
+      const featuredData = await featuredRes.json();
+      setFeaturedRecipes(featuredData);
+
+      // Fetch most recent baking recipes
+      const bakingRes = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/recipes/recent-baking`,
+        { credentials: 'include' }
+      );
+      const bakingData = await bakingRes.json();
+      setBakingRecipes(bakingData);
+
+      setLoading(false);
+    } catch (err) {
+      setError('Failed to load recipes. Please try again.');
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="home-page">
@@ -56,9 +71,18 @@ function Home() {
           <Link to="/browse" className="btn-primary">
             Browse Recipes
           </Link>
-          <Link to="/login" className="btn-secondary">
-            Join Now
-          </Link>
+          {/* Only show Join Now if not logged in */}
+          {!isLoggedIn && (
+            <Link to="/login" className="btn-secondary">
+              Join Now
+            </Link>
+          )}
+          {/* Show Add Recipe if logged in */}
+          {isLoggedIn && (
+            <Link to="/add-recipe" className="btn-secondary">
+              Add Recipe
+            </Link>
+          )}
         </div>
       </div>
 
@@ -70,9 +94,12 @@ function Home() {
         <p>Loading recipes...</p>
       ) : (
         <>
-          {/* Featured Recipes Section */}
+          {/* Featured Recipes Section - most reviewed */}
           <section className="home-section">
-            <h2 className="section-title">Featured Recipes</h2>
+            <h2 className="section-title">⭐ Featured Recipes</h2>
+            <p className="section-subtitle">
+              Most popular recipes from our community
+            </p>
             {featuredRecipes.length === 0 ? (
               <p>No recipes yet. Be the first to add one!</p>
             ) : (
@@ -84,9 +111,12 @@ function Home() {
             )}
           </section>
 
-          {/* Popular Baking Recipes Section */}
+          {/* Latest Baking Recipes Section - most recent */}
           <section className="home-section">
-            <h2 className="section-title">Popular Baking Recipes</h2>
+            <h2 className="section-title">🧁 Latest Baking Recipes</h2>
+            <p className="section-subtitle">
+              Freshly added baking recipes
+            </p>
             {bakingRecipes.length === 0 ? (
               <p>No baking recipes yet!</p>
             ) : (

@@ -24,16 +24,38 @@ function RecipeDetail() {
   const [reviewError, setReviewError] = useState('');
   // State for review success
   const [reviewSuccess, setReviewSuccess] = useState('');
-  // State for logged in user
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    document.cookie.includes('username')
-  );
+  // State for logged in status
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // State for logged in user ID
+  const [loggedInUserId, setLoggedInUserId] = useState(null);
 
   // Fetch recipe and reviews when page loads
   useEffect(() => {
+    checkLoginStatus();
     fetchRecipe();
     fetchReviews();
   }, [id]);
+
+  // Check if user is logged in and get their ID
+  const checkLoginStatus = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/users/profile`,
+        { credentials: 'include' }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setIsLoggedIn(true);
+        setLoggedInUserId(data._id);
+      } else {
+        setIsLoggedIn(false);
+        setLoggedInUserId(null);
+      }
+    } catch (err) {
+      setIsLoggedIn(false);
+      setLoggedInUserId(null);
+    }
+  };
 
   // Fetch recipe from backend
   const fetchRecipe = async () => {
@@ -105,9 +127,7 @@ function RecipeDetail() {
         setReviewError(data.error || 'Failed to add review.');
       } else {
         setReviewSuccess('Review added!');
-        // Reset form
         setReviewForm({ rating: 5, comment: '' });
-        // Refresh reviews
         fetchReviews();
       }
     } catch (err) {
@@ -150,6 +170,17 @@ function RecipeDetail() {
       {/* Recipe Header */}
       <div className="recipe-detail-header card">
 
+        {/* Recipe Image */}
+        {recipe.image ? (
+          <img
+            src={recipe.image}
+            alt={recipe.title}
+            className="recipe-detail-image"
+          />
+        ) : (
+          <div className="recipe-detail-no-image">🍴</div>
+        )}
+
         {/* Title and badges */}
         <h1 className="recipe-detail-title">{recipe.title}</h1>
 
@@ -178,16 +209,26 @@ function RecipeDetail() {
           <div className="stat">
             <span className="stat-icon">👤</span>
             <span className="stat-label">Author</span>
-            <span className="stat-value">{recipe.author?.username}</span>
+            <span className="stat-value">
+              {recipe.author?.username || 'Unknown'}
+            </span>
           </div>
         </div>
 
         {/* Action buttons */}
         <div className="recipe-detail-actions">
-          <Link to="/compare" className="btn-secondary">
+          {/* Pass recipe ID to compare page via URL */}
+          <Link to={`/compare?recipeA=${id}`} className="btn-secondary">
             Compare Recipe
           </Link>
-          {isLoggedIn && (
+          
+          {/* Only show edit and delete if logged in user is the author */}
+          {isLoggedIn && String(loggedInUserId) === String(recipe.author?._id) && (
+            <Link to={`/edit-recipe/${id}`} className="btn-primary">
+              Edit Recipe
+            </Link>
+          )}
+          {isLoggedIn && String(loggedInUserId) === String(recipe.author?._id) && (
             <button onClick={handleDeleteRecipe} className="btn-danger">
               Delete Recipe
             </button>
@@ -218,8 +259,8 @@ function RecipeDetail() {
       <div className="reviews-section card">
         <h2>Ratings & Reviews</h2>
 
-        {/* Add review form - only show if logged in */}
-        {isLoggedIn ? (
+        {/* Add review form */}
+        {isLoggedIn && String(loggedInUserId) !== String(recipe.author?._id) ? (
           <form onSubmit={handleReviewSubmit} className="review-form">
             <h3>Leave a Review</h3>
 
@@ -256,6 +297,10 @@ function RecipeDetail() {
               Submit Review
             </button>
           </form>
+         ) : isLoggedIn && String(loggedInUserId) === String(recipe.author?._id) ? (
+          <p className="review-own-recipe">
+            You cannot review your own recipe.
+          </p>
         ) : (
           <p>
             <Link to="/login">Login</Link> to leave a review.

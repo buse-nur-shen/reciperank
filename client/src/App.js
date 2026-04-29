@@ -10,6 +10,7 @@ import AddRecipe from './pages/AddRecipe';
 import RecipeDetail from './pages/RecipeDetail';
 import RecipeComparison from './pages/RecipeComparison';
 import UserProfile from './pages/UserProfile';
+import EditRecipe from './pages/EditRecipe';
 
 // Import navbar component
 import Navbar from './components/Navbar';
@@ -38,6 +39,8 @@ function App() {
           <Route path="/compare" element={<RecipeComparison />} />
           {/* User profile page */}
           <Route path="/profile" element={<UserProfile />} />
+          {/* Edit recipe page */}
+          <Route path="/edit-recipe/:id" element={<EditRecipe />} />
         </Routes>
       </div>
     </Router>
