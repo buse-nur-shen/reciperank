@@ -43,8 +43,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24, // 1 day
-    secure: true,      // required for https
-    sameSite: 'none'   // required for cross-origin cookies
+    secure: process.env.NODE_ENV === 'production', // https only in production
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax' // allow cross-site cookies
   }
 }));
 

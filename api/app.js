@@ -19,10 +19,18 @@ app.use(cookieParser());
 
 // Allow cross-origin requests from React app
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    process.env.CLIENT_URL
-  ],
+  origin: function(origin, callback) {
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'https://reciperank-client.onrender.com',
+      process.env.CLIENT_URL
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
@@ -33,8 +41,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24, // 1 day
-    secure: true,      // required for https
-    sameSite: 'none'   // required for cross-origin cookies
+    secure: process.env.NODE_ENV === 'production', // https only in production
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax' // allow cross-site cookies
   }
 }));
 
