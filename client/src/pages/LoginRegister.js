@@ -1,4 +1,3 @@
-// LoginRegister.js - Login and Register page with two tabs
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

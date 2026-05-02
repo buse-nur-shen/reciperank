@@ -1,4 +1,3 @@
-// Navbar.js - Navigation bar shown on every page
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
@@ -46,9 +45,8 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      {/* Logo */}
       <Link to="/" className="navbar-logo">
-        🍴 RecipeRank
+         RecipeRank
       </Link>
 
       {/* Navigation links */}

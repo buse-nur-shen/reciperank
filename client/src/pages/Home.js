@@ -1,10 +1,9 @@
-// Home.js - Landing page showing featured and popular baking recipes
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import RecipeCard from '../components/RecipeCard';
 
 function Home() {
-  // State to store featured recipes (most reviewed)
+  // State to store featured recipes 
   const [featuredRecipes, setFeaturedRecipes] = useState([]);
   // State to store most recent baking recipes
   const [bakingRecipes, setBakingRecipes] = useState([]);
@@ -37,7 +36,7 @@ function Home() {
   // Fetch featured and baking recipes
   const fetchRecipes = async () => {
     try {
-      // Fetch featured recipes - most reviewed
+      // Fetch featured recipes
       const featuredRes = await fetch(
         `${process.env.REACT_APP_API_URL}/api/recipes/featured`,
         { credentials: 'include' }
@@ -65,7 +64,7 @@ function Home() {
 
       {/* Hero Section */}
       <div className="hero-section">
-        <h1>Welcome to RecipeRank 🍴</h1>
+        <h1>Welcome to RecipeRank </h1>
         <p>Discover, share, and compare the best recipes from our community.</p>
         <div className="hero-buttons">
           <Link to="/browse" className="btn-primary">
@@ -94,9 +93,9 @@ function Home() {
         <p>Loading recipes...</p>
       ) : (
         <>
-          {/* Featured Recipes Section - most reviewed */}
+          {/* Featured Recipes */}
           <section className="home-section">
-            <h2 className="section-title">⭐ Featured Recipes</h2>
+            <h2 className="section-title"> Featured Recipes</h2>
             <p className="section-subtitle">
               Most popular recipes from our community
             </p>
@@ -111,9 +110,9 @@ function Home() {
             )}
           </section>
 
-          {/* Latest Baking Recipes Section - most recent */}
+          {/* Latest Baking Recipes Section */}
           <section className="home-section">
-            <h2 className="section-title">🧁 Latest Baking Recipes</h2>
+            <h2 className="section-title"> Latest Baking Recipes</h2>
             <p className="section-subtitle">
               Freshly added baking recipes
             </p>

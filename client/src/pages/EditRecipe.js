@@ -1,4 +1,3 @@
-// EditRecipe.js - Page to edit an existing recipe
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -62,7 +61,7 @@ function EditRecipe() {
           return;
         }
 
-        // Fill form with existing recipe data
+        // Fill the form with existing recipe data
         setFormData({
           title: data.title || '',
           category: data.category || '',
@@ -74,7 +73,7 @@ function EditRecipe() {
         });
         setIngredients(data.ingredients || ['']);
 
-        // Set existing image if there is one
+        // set existing image if there is one
         if (data.image) {
           setImagePreview(data.image);
           setImageBase64(data.image);
@@ -106,19 +105,19 @@ function EditRecipe() {
 
     if (!file) return;
 
-    // Only allow PNG and JPEG
+    // Only allow png and jpeg
     if (!['image/png', 'image/jpeg'].includes(file.type)) {
       setImageError('Only PNG and JPEG images are allowed.');
       return;
     }
 
-    // Limit file size to 2MB
+    // Limit file size to 2mb
     if (file.size > 2 * 1024 * 1024) {
       setImageError('Image must be smaller than 2MB.');
       return;
     }
 
-    // Convert image to base64
+    // Convert the image to base64
     const reader = new FileReader();
     reader.onloadend = () => {
       setImageBase64(reader.result);
@@ -230,10 +229,10 @@ function EditRecipe() {
     setLoading(false);
   };
 
-  // Show loading while fetching recipe
+  //  Loading message while fetching recipe
   if (fetching) return <p>Loading recipe...</p>;
 
-  // Show error if not author
+  // Show error if not the author
   if (error) return <p className="error-message">{error}</p>;
 
   return (

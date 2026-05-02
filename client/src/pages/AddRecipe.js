@@ -1,4 +1,3 @@
-// AddRecipe.js - Page to create a new recipe with image upload
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -41,7 +40,7 @@ function AddRecipe() {
     }
   };
 
-  // Handle image upload - convert to base64
+  // Handle image upload
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImageError('');
@@ -262,7 +261,7 @@ function AddRecipe() {
                   id="image-input"
                 />
                 <label htmlFor="image-input" className="image-upload-label">
-                  <span>📷 Click to upload image</span>
+                  <span> Click to upload image</span>
                   <span className="image-upload-hint">PNG or JPEG only, max 3MB</span>
                 </label>
               </div>

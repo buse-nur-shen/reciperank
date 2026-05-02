@@ -1,12 +1,12 @@
-// RecipeComparison.js - Page to compare two recipes side by side
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 function RecipeComparison() {
-  // Get URL search params - to pre-select recipe A
+  // Get URL search params 
   const [searchParams] = useSearchParams();
 
-  // State for all recipes (for dropdown selection)
+  // State for all recipes 
   const [allRecipes, setAllRecipes] = useState([]);
   // State for selected recipe IDs
   const [recipeAId, setRecipeAId] = useState(searchParams.get('recipeA') || '');
@@ -94,7 +94,7 @@ function RecipeComparison() {
       {/* Recipe Selection */}
       <div className="comparison-selectors card">
 
-        {/* Recipe A - pre-selected from URL */}
+        {/* Recipe A  */}
         <div className="form-group">
           <label>Recipe A</label>
           <select
@@ -112,7 +112,7 @@ function RecipeComparison() {
 
         <div className="comparison-vs">VS</div>
 
-        {/* Recipe B - user picks this one */}
+        {/* Recipe B */}
         <div className="form-group">
           <label>Recipe B</label>
           <select
@@ -150,7 +150,7 @@ function RecipeComparison() {
                   className="comparison-image"
                 />
               ) : (
-                <div className="comparison-no-image">🍴</div>
+                <div className="comparison-no-image">NA</div>
               )}
 
               <h2 className="comparison-recipe-title">{recipeA.title}</h2>
@@ -168,7 +168,7 @@ function RecipeComparison() {
               </div>
 
               <div className={`comparison-stat ${recipeA.cookingTime < recipeB.cookingTime ? 'comparison-winner' : ''}`}>
-                <span className="comparison-label">⏱ Cook Time</span>
+                <span className="comparison-label"> Cook Time</span>
                 <span className="comparison-value">{recipeA.cookingTime} mins</span>
                 {recipeA.cookingTime < recipeB.cookingTime && (
                   <span className="winner-badge">✓ Faster</span>
@@ -176,7 +176,7 @@ function RecipeComparison() {
               </div>
 
               <div className="comparison-stat">
-                <span className="comparison-label">🍽 Servings</span>
+                <span className="comparison-label"> Servings</span>
                 <span className="comparison-value">{recipeA.servings}</span>
               </div>
 
@@ -208,7 +208,7 @@ function RecipeComparison() {
                   className="comparison-image"
                 />
               ) : (
-                <div className="comparison-no-image">🍴</div>
+                <div className="comparison-no-image">NA</div>
               )}
 
               <h2 className="comparison-recipe-title">{recipeB.title}</h2>
@@ -226,7 +226,7 @@ function RecipeComparison() {
               </div>
 
               <div className={`comparison-stat ${recipeB.cookingTime < recipeA.cookingTime ? 'comparison-winner' : ''}`}>
-                <span className="comparison-label">⏱ Cook Time</span>
+                <span className="comparison-label"> Cook Time</span>
                 <span className="comparison-value">{recipeB.cookingTime} mins</span>
                 {recipeB.cookingTime < recipeA.cookingTime && (
                   <span className="winner-badge">✓ Faster</span>
@@ -234,7 +234,7 @@ function RecipeComparison() {
               </div>
 
               <div className="comparison-stat">
-                <span className="comparison-label">🍽 Servings</span>
+                <span className="comparison-label"> Servings</span>
                 <span className="comparison-value">{recipeB.servings}</span>
               </div>
 
@@ -258,7 +258,7 @@ function RecipeComparison() {
 
           {/* Recommended Recipe */}
           <div className="recommendation-box card">
-            <h3>🏆 Recommended Recipe</h3>
+            <h3> Recommended Recipe!</h3>
             <p>{getRecommended()}</p>
           </div>
         </div>

@@ -1,4 +1,3 @@
-// RecipeDetail.js - Page to view a single recipe with reviews
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 
@@ -36,7 +35,7 @@ function RecipeDetail() {
     fetchReviews();
   }, [id]);
 
-  // Check if user is logged in and get their ID
+  // Checks if user is logged in and get their ID
   const checkLoginStatus = async () => {
     try {
       const res = await fetch(
@@ -178,7 +177,7 @@ function RecipeDetail() {
             className="recipe-detail-image"
           />
         ) : (
-          <div className="recipe-detail-no-image">🍴</div>
+          <div className="recipe-detail-no-image">NA</div>
         )}
 
         {/* Title and badges */}
@@ -197,17 +196,17 @@ function RecipeDetail() {
         {/* Recipe stats */}
         <div className="recipe-detail-stats">
           <div className="stat">
-            <span className="stat-icon">⏱</span>
+            <span className="stat-icon"></span>
             <span className="stat-label">Cook Time</span>
             <span className="stat-value">{recipe.cookingTime} mins</span>
           </div>
           <div className="stat">
-            <span className="stat-icon">🍽</span>
+            <span className="stat-icon"></span>
             <span className="stat-label">Servings</span>
             <span className="stat-value">{recipe.servings}</span>
           </div>
           <div className="stat">
-            <span className="stat-icon">👤</span>
+            <span className="stat-icon"></span>
             <span className="stat-label">Author</span>
             <span className="stat-value">
               {recipe.author?.username || 'Unknown'}

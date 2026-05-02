@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Define what a Recipe looks like in the database
+// Define what a recipe looks like in the database
 const recipeSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -47,7 +47,7 @@ const recipeSchema = new mongoose.Schema({
     type: String,
     default: null
   },
-  // Reference to the user who created this recipe
+ 
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

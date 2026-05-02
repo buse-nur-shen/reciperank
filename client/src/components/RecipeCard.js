@@ -1,4 +1,3 @@
-// RecipeCard.js - Reusable card component to display a recipe summary
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -6,7 +5,7 @@ function RecipeCard({ recipe }) {
   return (
     <div className="recipe-card card">
 
-      {/* Recipe Image - show image or placeholder */}
+      {/* Recipe Image*/}
       {recipe.image ? (
         <img
           src={recipe.image}
@@ -15,7 +14,7 @@ function RecipeCard({ recipe }) {
         />
       ) : (
         <div className="recipe-card-no-image">
-          🍴
+          NA
         </div>
       )}
 
@@ -35,8 +34,8 @@ function RecipeCard({ recipe }) {
 
       {/* Cooking time and servings */}
       <div className="recipe-card-info">
-        <span>⏱ {recipe.cookingTime} mins</span>
-        <span>🍽 {recipe.servings} servings</span>
+        <span> {recipe.cookingTime} mins</span>
+        <span> {recipe.servings} servings</span>
       </div>
 
       {/* Author */}

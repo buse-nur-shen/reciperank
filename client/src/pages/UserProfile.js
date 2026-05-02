@@ -1,4 +1,3 @@
-// UserProfile.js - Page to view and manage user profile
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import RecipeCard from '../components/RecipeCard';
@@ -77,13 +76,13 @@ function UserProfile() {
 
     if (!file) return;
 
-    // Only allow PNG and JPEG
+    // Only allow png and jpeg
     if (!['image/png', 'image/jpeg'].includes(file.type)) {
       setPictureError('Only PNG and JPEG images are allowed.');
       return;
     }
 
-    // Limit file size to 2MB
+    // Limit file size to 2mb
     if (file.size > 2 * 1024 * 1024) {
       setPictureError('Image must be smaller than 2MB.');
       return;
@@ -244,7 +243,7 @@ function UserProfile() {
                     id="profile-picture-input"
                   />
                   <label htmlFor="profile-picture-input" className="image-upload-label">
-                    <span>📷 Click to upload picture</span>
+                    <span> Click to upload picture</span>
                     <span className="image-upload-hint">PNG or JPEG only, max 2MB</span>
                   </label>
                 </div>
