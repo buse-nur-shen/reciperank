@@ -15,7 +15,7 @@ const validateRegister = [
     .isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
 ];
 
-// rules for recipes
+// rules for recipe
 const validateRecipe = [
   body('title')
     .trim()

@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const { isAuthenticated } = require('../middleware/auth');
 
-// POST /api/users/register — Create a new account
+//  Create a new account
 router.post('/register', async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -41,7 +41,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// POST /api/users/login — Log in
+// Log in
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -75,7 +75,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// POST /api/users/logout — Log out
+//  Log out
 router.post('/logout', (req, res) => {
   // Destroy the session
   req.session.destroy((err) => {
@@ -86,7 +86,7 @@ router.post('/logout', (req, res) => {
   });
 });
 
-// GET /api/users/profile — View own profile (must be logged in)
+//  View own profile (must be logged in)
 router.get('/profile', isAuthenticated, async (req, res) => {
   try {
     // Find user but don't return the password
@@ -98,7 +98,7 @@ router.get('/profile', isAuthenticated, async (req, res) => {
   }
 });
 
-// PUT /api/users/profile — Update username and profile picture
+// Update username and profile picture
 router.put('/profile', isAuthenticated, async (req, res) => {
   try {
     const { username, profilePicture } = req.body;

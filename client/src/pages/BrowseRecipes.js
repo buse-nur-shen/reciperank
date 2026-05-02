@@ -1,4 +1,3 @@
-// BrowseRecipes.js - Page to browse, search and filter all recipes
 import React, { useState, useEffect } from 'react';
 import RecipeCard from '../components/RecipeCard';
 
@@ -21,7 +20,6 @@ function BrowseRecipes() {
   });
 
   // Fetch recipes when filters change
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchRecipes();
   }, [filters]);
@@ -144,7 +142,7 @@ function BrowseRecipes() {
             </select>
           </div>
 
-          {/* Subcategory filter - show different options based on category */}
+          {/* Subcategory filter */}
           {filters.category && (
             <div className="form-group">
               <label>Subcategory</label>

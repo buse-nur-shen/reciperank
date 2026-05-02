@@ -1,4 +1,4 @@
-//middleware to check if a user is logged in
+//middlewre to check if a user is logged in
 const isAuthenticated = (req, res, next) => {
     if (req.session && req.session.userId) {
       //if user is logged in continues

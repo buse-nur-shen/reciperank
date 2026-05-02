@@ -3,7 +3,7 @@ const router = express.Router();
 const Recipe = require('../models/Recipe');
 const { isAuthenticated } = require('../middleware/auth');
 
-// GET /api/recipes/featured — Get top 3 recipes with most reviews
+// Get top 3 recipes with most reviews
 router.get('/featured', async (req, res) => {
   try {
     const Review = require('../models/Review');
@@ -30,7 +30,7 @@ router.get('/featured', async (req, res) => {
   }
 });
 
-// GET /api/recipes/recent-baking — Get 3 most recent baking recipes
+// Get 3 most recent baking recipes
 router.get('/recent-baking', async (req, res) => {
   try {
     const recipes = await Recipe.find({ category: 'baking' })
@@ -44,7 +44,7 @@ router.get('/recent-baking', async (req, res) => {
   }
 });
 
-// GET /api/recipes — Get all recipes (with optional filters)
+// Get all recipes 
 router.get('/', async (req, res) => {
   try {
     // Build a filter object from query params
@@ -60,7 +60,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/recipes/:id — Get one recipe by ID
+//  Get one recipe by ID
 router.get('/:id', async (req, res) => {
   try {
     const recipe = await Recipe.findById(req.params.id).populate('author', 'username');
@@ -71,7 +71,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST /api/recipes — Create a new recipe (must be logged in)
+// Create a new recipe (must be logged in)
 router.post('/', isAuthenticated, async (req, res) => {
   try {
     const {
@@ -130,7 +130,7 @@ router.post('/', isAuthenticated, async (req, res) => {
   }
 });
 
-// PUT /api/recipes/:id — Update a recipe (only the author can do this)
+// Update a recipe (only the author can do this)
 router.put('/:id', isAuthenticated, async (req, res) => {
   try {
     const recipe = await Recipe.findById(req.params.id);
@@ -152,7 +152,7 @@ router.put('/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// DELETE /api/recipes/:id — Delete a recipe (only the author can do this)
+// Delete a recipe (only the author can do this)
 router.delete('/:id', isAuthenticated, async (req, res) => {
   try {
     const recipe = await Recipe.findById(req.params.id);

@@ -8,10 +8,10 @@ const cors = require('cors');
 
 const app = express();
 
-// Parse incoming JSON requests - increase limit for base64 images
+// Parse incoming JSON requests 
 app.use(express.json({ limit: '10mb' }));
 
-// Parse URL-encoded form data - increase limit for base64 images
+// Parse URL-encoded form data 
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 //parse cookie
@@ -38,8 +38,8 @@ app.get('/', (req, res) => {
 
 // connect to mongoDB
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('✅ Connected to MongoDB'))
-  .catch((err) => console.error('❌ MongoDB connection error:', err));
+  .then(() => console.log(' Connected to MongoDB'))
+  .catch((err) => console.error(' MongoDB connection error:', err));
 
 // import route modules
 const userRoutes = require('./routes/users');
@@ -53,7 +53,7 @@ app.use('/api/reviews', reviewRoutes);
 // assign server port and start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(` Server running on http://localhost:${PORT}`);
 });
 
 module.exports = app;

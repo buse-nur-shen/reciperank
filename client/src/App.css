@@ -1,6 +1,6 @@
-/* App.css - Global styles for RecipeRank */
 
-/* ── Reset & Base ────────────────────────────────────────── */
+
+/* Reset & Base  */
 * {
   margin: 0;
   padding: 0;
@@ -13,14 +13,14 @@ body {
   color: #4E342E;
 }
 
-/* ── App Container ───────────────────────────────────────── */
+/* App Container */
 .app-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
 
-/* ── Navbar ──────────────────────────────────────────────── */
+/* Navbar */
 .navbar {
   display: flex;
   align-items: center;
@@ -73,7 +73,7 @@ body {
   background-color: #FFF3E0;
 }
 
-/* ── Buttons ─────────────────────────────────────────────── */
+/* Buttons */
 .btn-primary {
   background-color: #FF7A00;
   color: white;
@@ -123,7 +123,7 @@ body {
   font-size: 0.85rem;
 }
 
-/* ── Forms ───────────────────────────────────────────────── */
+/* Forms */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -174,7 +174,7 @@ body {
   font-size: 1rem;
 }
 
-/* ── Error & Success Messages ────────────────────────────── */
+/* Error & Success Messages  */
 .error-message {
   background-color: #fdecea;
   color: #c0392b;
@@ -193,7 +193,7 @@ body {
   font-size: 0.9rem;
 }
 
-/* ── Cards ───────────────────────────────────────────────── */
+/* Cards */
 .card {
   background-color: white;
   border-radius: 12px;
@@ -208,7 +208,7 @@ body {
   margin-top: 20px;
 }
 
-/* ── Page Title ──────────────────────────────────────────── */
+/* Page Title  */
 .page-title {
   font-size: 2rem;
   color: #4E342E;
@@ -216,7 +216,7 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
-/* ── Section Title & Subtitle ────────────────────────────── */
+/* Section Title & Subtitle  */
 .section-title {
   font-size: 1.5rem;
   color: #4E342E;
@@ -233,7 +233,7 @@ body {
   margin-top: -10px;
 }
 
-/* ── Badges ──────────────────────────────────────────────── */
+/* Badges */
 .badge {
   padding: 4px 10px;
   border-radius: 20px;
@@ -268,7 +268,7 @@ body {
   color: #c0392b;
 }
 
-/* ── Submit Button ───────────────────────────────────────── */
+/* Submit Button  */
 .submit-btn {
   width: 100%;
   padding: 14px;
@@ -276,7 +276,7 @@ body {
   font-size: 1.1rem;
 }
 
-/* ── Responsive ──────────────────────────────────────────── */
+/* Responsive  */
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
@@ -297,7 +297,7 @@ body {
   }
 }
 
-/* ── Recipe Card ─────────────────────────────────────────── */
+/*  Recipe Card  */
 .recipe-card {
   display: flex;
   flex-direction: column;
@@ -334,7 +334,7 @@ body {
   margin-top: auto;
 }
 
-/* ── Recipe Card Image ───────────────────────────────────── */
+/* Recipe Card Image  */
 .recipe-card-image {
   width: 100%;
   height: 180px;
@@ -354,7 +354,7 @@ body {
   font-size: 3rem;
 }
 
-/* ── Home Page ───────────────────────────────────────────── */
+/* Home Page  */
 .hero-section {
   background-color: #FF7A00;
   color: white;
@@ -405,7 +405,7 @@ body {
   margin-bottom: 40px;
 }
 
-/* ── Auth Page ───────────────────────────────────────────── */
+/* Auth Page  */
 .auth-page {
   display: flex;
   justify-content: center;
@@ -471,7 +471,7 @@ body {
   text-decoration: underline;
 }
 
-/* ── Browse Page ─────────────────────────────────────────── */
+/* Browse Page  */
 .browse-layout {
   display: grid;
   grid-template-columns: 250px 1fr;
@@ -512,7 +512,7 @@ body {
   }
 }
 
-/* ── Search Bar ──────────────────────────────────────────── */
+/* Search Bar  */
 .search-bar-form {
   margin-bottom: 20px;
 }
@@ -549,7 +549,7 @@ body {
   font-size: 0.9rem;
 }
 
-/* ── Recipe Detail Page ──────────────────────────────────── */
+/* Recipe Detail Page  */
 .recipe-detail-page {
   display: flex;
   flex-direction: column;
@@ -641,7 +641,7 @@ body {
   color: #4E342E;
 }
 
-/* ── Recipe Detail Image ─────────────────────────────────── */
+/* Recipe Detail Image */
 .recipe-detail-image {
   width: 100%;
   height: 400px;
@@ -675,7 +675,7 @@ body {
   }
 }
 
-/* ── Reviews Section ─────────────────────────────────────── */
+/* Reviews Section  */
 .reviews-section {
   padding: 30px;
 }
@@ -732,7 +732,7 @@ body {
   color: #999;
 }
 
-/* ── Review Own Recipe Message ───────────────────────────── */
+/* Review Own Recipe Message  */
 .review-own-recipe {
   background-color: #FFF3E0;
   color: #FF7A00;
@@ -742,7 +742,7 @@ body {
   margin-bottom: 15px;
 }
 
-/* ── Add Recipe Page ─────────────────────────────────────── */
+/* ──Add Recipe Page  */
 .add-recipe-page {
   max-width: 800px;
   margin: 0 auto;
@@ -752,7 +752,7 @@ body {
   padding: 30px;
 }
 
-/* ── Image Upload ────────────────────────────────────────── */
+/* Image Upload  */
 .image-upload-area {
   border: 2px dashed #FF7A00;
   border-radius: 8px;
@@ -797,7 +797,7 @@ body {
   border: 1px solid #ccc;
 }
 
-/* ── Comparison Page ─────────────────────────────────────── */
+/*  Comparison Page  */
 .comparison-page {
   max-width: 1000px;
   margin: 0 auto;
@@ -909,7 +909,7 @@ body {
   font-size: 1rem;
 }
 
-/* ── Comparison Image ────────────────────────────────────── */
+/* Comparison Image  */
 .comparison-image {
   width: 100%;
   height: 200px;
@@ -941,7 +941,7 @@ body {
   }
 }
 
-/* ── User Profile Page ───────────────────────────────────── */
+/* User Profile Page  */
 .profile-page {
   display: flex;
   flex-direction: column;
@@ -1072,7 +1072,7 @@ body {
   }
 }
 
-/* ── Edit Profile Form ───────────────────────────────────── */
+/* Edit Profile Form  */
 .edit-profile-form {
   flex: 1;
   padding: 10px;
@@ -1091,7 +1091,7 @@ body {
   margin-top: 10px;
 }
 
-/* ── Edit Recipe Buttons ─────────────────────────────────── */
+/* Edit Recipe Buttons */
 .edit-recipe-buttons {
   display: flex;
   gap: 10px;
