@@ -17,8 +17,12 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 //parse cookie
 app.use(cookieParser());
 
+// Allow cross-origin requests from React app
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    process.env.CLIENT_URL
+  ],
   credentials: true
 }));
 
