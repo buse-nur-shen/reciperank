@@ -31,7 +31,11 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 day
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24, // 1 day
+    secure: true,      // required for https
+    sameSite: 'none'   // required for cross-origin cookies
+  }
 }));
 
 // route to verify api is running
